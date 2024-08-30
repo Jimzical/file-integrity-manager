@@ -31,16 +31,3 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 
 	}
 }
-
-func logHashResult(result int, filePath string) {
-	switch result {
-	case NewEntry:
-		fmt.Printf("New entry added for %q\n", filePath)
-	case HashMatch:
-		fmt.Printf("Hash match for %q\n", filePath)
-	case HashMismatch:
-		fmt.Printf("Hash mismatch for %q\n", filePath)
-	default:
-		fmt.Printf("Error checking hash for %q\n", filePath)
-	}
-}

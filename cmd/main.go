@@ -9,7 +9,7 @@ import (
 func main() {
 	fmt.Println("Starting")
 
-	targetFolder := "C:\\Personal\\Uni\\CS\\Golang\\file-integrity-manager\\testingFolder"
+	targetFolder := "C:\\Personal\\Uni\\CS\\Golang\\file-integrity-manager\\tests\\testingFolder"
 
 	fileManager.TraverseFolder(targetFolder)
 

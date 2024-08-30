@@ -1,9 +1,7 @@
-TODO: 
-[x] check and remove the outputfile parameter and see if we can just use the constants directly
+todo
 
-[ ] Try out badgerdb
-    - make sure to add why its good in the docs (readme lol)
+use lipgloss to improve the look of the output
 
-[ ] Need to restructure it all
+add docs to all
 
-[ ] Figure out the cli part
+actually fill out this readme
