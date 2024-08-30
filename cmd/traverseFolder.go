@@ -7,11 +7,14 @@ import (
 	"sync"
 
 	bdgr "github.com/Jimzical/file-integrity-manager/internal/badgerDB"
+
+	fileStructs "github.com/Jimzical/file-integrity-manager/internal/models"
+
 )
 
 func traverseFolder(targetFolder string) {
 	var wg sync.WaitGroup
-	filepathsChannel := make(chan FileInfo)
+	filepathsChannel := make(chan fileStructs.FileInfo)
 
 	db, err := bdgr.InitBadger()
 	if err != nil {
@@ -33,15 +36,15 @@ func traverseFolder(targetFolder string) {
 	wg.Wait()
 }
 
-func walkFolder(targetFolder string, filepathsChannel chan<- FileInfo) error {
+func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
 	return filepath.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		// adding fileInfo to the channel to be hashed
+		// adding fileStructs.fileInfo to the channel to be hashed
 		if !fileInfo.IsDir() {
-			filepathsChannel <- FileInfo{
+			filepathsChannel <- fileStructs.FileInfo{
 				FilePath: file,
 				FileMode: fileInfo.Mode(),
 				FileSize: fileInfo.Size(),
