@@ -11,14 +11,14 @@ import (
 
 func getStatus(result int) string {
 	switch result {
-	case NewEntry:
-		return "New Entry"
-	case HashMatch:
-		return "Hash Match"
-	case HashMismatch:
-		return "Hash Mismatch"
+	case NewEntryCode:
+		return NEW_ENTRY
+	case HashMatchCode:
+		return HASH_MATCH
+	case HashMismatchCode:
+		return HASH_MISMATCH
 	default:
-		return "Error Checking Hash"
+		return ERROR_CHECKING_HASH
 	}
 }
 
@@ -36,7 +36,24 @@ func printTable(rows [][]string) {
 	t := table.New().
 		Border(lipgloss.NormalBorder()).
 		BorderStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("99"))).
-		Headers("Display Path", "Status").
+		StyleFunc(func(row, col int) lipgloss.Style {
+			if row == 0 {
+				// Style for the header row
+				return lipgloss.NewStyle().Foreground(lipgloss.Color("99"))
+			}
+			if rows[row-1][STATUS_COL] == HASH_MISMATCH {
+				// return lipgloss.NewStyle().Background(lipgloss.Color("#de190b")).Foreground(lipgloss.Color("#ffffff"))
+				return lipgloss.NewStyle().Foreground(lipgloss.Color("#960312"))
+			}
+			if rows[row-1][STATUS_COL] == HASH_MATCH {
+				return lipgloss.NewStyle().Foreground(lipgloss.Color("#57b000"))
+			}
+			if rows[row-1][STATUS_COL] == NEW_ENTRY {
+				return lipgloss.NewStyle().Foreground(lipgloss.Color("#4b13e8"))
+			}
+			return lipgloss.NewStyle().Foreground(lipgloss.Color("#4b13e8"))
+		}).
+		Headers(HEADER_FILE, HEADER_STATUS).
 		Rows(rows...)
 
 	fmt.Println(t)

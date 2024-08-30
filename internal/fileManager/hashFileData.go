@@ -24,7 +24,7 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 
 		result, err := bdgr.CheckFileHash(db, filePath, fileHash)
 		if err != nil {
-			fmt.Printf("Error checking file hash %q: %v\n", filePath, err)
+			fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
 			continue
 		}
 

@@ -17,7 +17,7 @@ func TraverseFolder(targetFolder string) {
 
 	db, err := bdgr.InitBadger()
 	if err != nil {
-		fmt.Printf("Error initializing Badger: %v\n", err)
+		fmt.Printf("ErrorDuringHashCode initializing Badger: %v\n", err)
 		return
 	}
 	defer db.Close()
@@ -28,7 +28,7 @@ func TraverseFolder(targetFolder string) {
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
 	if err != nil {
-		fmt.Printf("Error walking the path %q: %v\n", targetFolder, err)
+		fmt.Printf("ErrorDuringHashCode walking the path %q: %v\n", targetFolder, err)
 	}
 
 	close(filepathsChannel)

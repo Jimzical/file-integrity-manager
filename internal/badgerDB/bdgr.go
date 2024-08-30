@@ -48,7 +48,7 @@ func CheckFileHash(db *badger.DB, filepath string, hash string) (int, error) {
 	})
 
 	if err != nil {
-		return Error, err
+		return ErrorDuringHashCode, err
 	}
 
 	if storedHash == "" {
@@ -57,15 +57,15 @@ func CheckFileHash(db *badger.DB, filepath string, hash string) (int, error) {
 			return txn.Set([]byte(filepath), []byte(hash))
 		})
 		if err != nil {
-			return Error, fmt.Errorf("failed to add new entry: %v", err)
+			return ErrorDuringHashCode, fmt.Errorf("failed to add new entry: %v", err)
 		}
 
-		return NewEntry, nil // Indicate that it's a new entry
+		return NewEntryCode, nil // Indicate that it's a new entry
 	}
 
 	if storedHash == hash {
-		return HashMatch, nil // Indicate that the hash matches
+		return HashMatchCode, nil // Indicate that the hash matches
 	}
 
-	return HashMismatch, nil // Indicate that the hash does not match
+	return HashMismatchCode, nil // Indicate that the hash does not match
 }
