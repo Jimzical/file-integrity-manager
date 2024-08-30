@@ -1,4 +1,4 @@
-package main
+package fileManager
 
 import (
 	"fmt"
@@ -9,10 +9,9 @@ import (
 	bdgr "github.com/Jimzical/file-integrity-manager/internal/badgerDB"
 
 	fileStructs "github.com/Jimzical/file-integrity-manager/internal/models"
-
 )
 
-func traverseFolder(targetFolder string) {
+func TraverseFolder(targetFolder string) {
 	var wg sync.WaitGroup
 	filepathsChannel := make(chan fileStructs.FileInfo)
 
@@ -24,7 +23,7 @@ func traverseFolder(targetFolder string) {
 	defer db.Close()
 
 	wg.Add(1)
-	go computeAndSaveFileHashes(filepathsChannel, db, &wg)
+	go ComputeAndSaveFileHashes(filepathsChannel, db, &wg)
 
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
