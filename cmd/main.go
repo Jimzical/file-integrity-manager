@@ -8,11 +8,16 @@ import (
 )
 
 func main() {
+	var targetFolder string
 	fmt.Println("Starting")
+	
 
-	targetFolder := "C:\\Personal\\Uni\\CS\\Golang\\file-integrity-manager\\tests"
+	// targetFolder = "C:\\Personal\\Uni\\CS\\Golang\\file-integrity-manager\\tests"
+	// TEST = C:\Personal\Uni\CS\Golang\file-integrity-manager\tests
 
 	ui.StartScreen()
+
+	targetFolder = fileManager.ReadTargetFolderPath()
 
 	fileManager.TraverseFolder(targetFolder)
 
