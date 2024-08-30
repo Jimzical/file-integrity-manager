@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"sync"
 
-	badger "github.com/dgraph-io/badger"
-
 	bdgr "github.com/Jimzical/file-integrity-manager/internal/badgerDB"
 	fileStructs "github.com/Jimzical/file-integrity-manager/internal/models"
+	badger "github.com/dgraph-io/badger"
 )
 
 // Function to write paths to the file
 func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
+
+	var rows [][]string
 
 	// Write the paths to the outputFile
 	for file := range filepathsChannel {
@@ -27,7 +28,10 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 			continue
 		}
 
-		logHashResult(result, filePath)
-
+		status := getStatus(result)
+		displayPath := getDisplayPath(filePath)
+		rows = append(rows, []string{displayPath, status})
 	}
+
+	printTable(rows)
 }

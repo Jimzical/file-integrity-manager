@@ -4,28 +4,40 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+
+	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss/table"
 )
 
-func logHashResult(result int, filePath string) {
-	// Split the file path into components
-	components := strings.Split(filePath, string(filepath.Separator))
-	displayPath := filePath
-
-	if len(components) > 1 {
-		// Get the last folder and the file name
-		lastFolder := components[len(components)-2]
-		fileName := components[len(components)-1]
-		displayPath = "..." + string(filepath.Separator) + lastFolder + string(filepath.Separator) + fileName
-	}
-
+func getStatus(result int) string {
 	switch result {
 	case NewEntry:
-		fmt.Printf("New entry added for %q\n", displayPath)
+		return "New Entry"
 	case HashMatch:
-		fmt.Printf("Hash match for %q\n", displayPath)
+		return "Hash Match"
 	case HashMismatch:
-		fmt.Printf("Hash mismatch for %q\n", displayPath)
+		return "Hash Mismatch"
 	default:
-		fmt.Printf("Error checking hash for %q\n", displayPath)
+		return "Error Checking Hash"
 	}
+}
+
+func getDisplayPath(filePath string) string {
+	components := strings.Split(filePath, string(filepath.Separator))
+	if len(components) > 1 {
+		lastFolder := components[len(components)-2]
+		fileName := components[len(components)-1]
+		return "..." + string(filepath.Separator) + lastFolder + string(filepath.Separator) + fileName
+	}
+	return filePath
+}
+
+func printTable(rows [][]string) {
+	t := table.New().
+		Border(lipgloss.NormalBorder()).
+		BorderStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("99"))).
+		Headers("Display Path", "Status").
+		Rows(rows...)
+
+	fmt.Println(t)
 }
