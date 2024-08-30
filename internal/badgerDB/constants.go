@@ -1,8 +1,8 @@
 package badgerDB
 
 const (
-	Error        = iota - 1 // -1
-	NewEntry                // 0
-	HashMatch               // 1
-	HashMismatch            // 2
+	ErrorDuringHashCode = iota - 1 // -1
+	NewEntryCode                   // 0
+	HashMatchCode                  // 1
+	HashMismatchCode               // 2
 )
