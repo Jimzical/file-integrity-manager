@@ -4,9 +4,9 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"os"
 	"sync"
 
+	bdgr "github.com/Jimzical/file-integrity-manager/internal/badgerDB"
 	badger "github.com/dgraph-io/badger"
 )
 
@@ -14,15 +14,6 @@ import (
 func computeAndSaveFileHashes(filepathsChannel <-chan FileInfo, db *badger.DB , wg *sync.WaitGroup) {
 	defer wg.Done()
  
-	// Create the file if not exists, else read the file
-	outputFile, err := os.Create(storageFile)
-	if err != nil {
-		fmt.Printf("Error creating outputFile %q: %v\n", storageFile, err)
-		return
-	}
-	defer outputFile.Close()
-
-
 	// Write the paths to the outputFile
 	for file:= range filepathsChannel {
 		filePath := file.FilePath
@@ -30,7 +21,7 @@ func computeAndSaveFileHashes(filepathsChannel <-chan FileInfo, db *badger.DB , 
 		fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
 		fileHash := hashString(fileData)
 
-		result, err := CheckFileHash(db, filePath, fileHash)
+		result, err := bdgr.CheckFileHash(db, filePath, fileHash)
 		if err != nil {
 			fmt.Printf("Error checking file hash %q: %v\n", filePath, err)
 			continue
