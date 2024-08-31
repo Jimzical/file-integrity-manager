@@ -1,7 +1,7 @@
 module github.com/Jimzical/file-integrity-manager
 
 go 1.22.3
-
+ 
 require github.com/dgraph-io/badger v1.6.2
 
 require (
