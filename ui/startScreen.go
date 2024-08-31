@@ -32,7 +32,7 @@ func StartScreen() {
 									|___/           |__/                        |___/         
 
 			`)),
-			infoStyle.Render("From"+divider+url("https://github.com/Jimizical/file-integrity-manager")),
+			displayInfo.Render("From"+divider+url("https://github.com/Jimizical/file-integrity-manager")),
 		)
 
 		row := lipgloss.JoinHorizontal(lipgloss.Top, title.String(), desc)

@@ -34,11 +34,17 @@ func TraverseFolder(targetFolder string) {
 
 	close(filepathsChannel)
 	wg.Wait()
+
+	ui.Special(fmt.Sprintf("\n\nMatched Files : %d\n", matchCount))
+	fmt.Print("\033[1B\033[0G") // Move cursor down one line and to the beginning of the line
+	ui.Incorrect(fmt.Sprintf("Mismatched Files : %d\n", misMatchCount))
+	fmt.Print("\033[1B\033[0G") // Move cursor down one line and to the beginning of the line
+	ui.Info(fmt.Sprintf("New Files : %d\n", addedCount))
+
 }
 
 func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
 	defer fmt.Println()
-	fileCount := 0
 
 	return filepath.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
 		if err != nil {

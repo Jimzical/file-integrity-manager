@@ -23,3 +23,10 @@ const (
 	FILE_COL      = 0
 	STATUS_COL    = 1
 )
+
+var (
+	fileCount int
+	matchCount int
+	misMatchCount int
+	addedCount int
+)
