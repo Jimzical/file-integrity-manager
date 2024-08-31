@@ -36,15 +36,14 @@ func getDisplayPath(filePath string) string {
 
 func printTable(rows [][]string) {
 	t := table.New().
-		Border(ui.BorderedTableStyle).
-		BorderStyle(ui.HeaderStyle).
-		StyleFunc(func(row, col int) lipgloss.Style {
+		Border(ui.TableBorderStyle).
+		BorderStyle(ui.TableStyle).
+		StyleFunc(func(row, col int) lipgloss.Style { // cant seem to remove this so the lipgloss dependency is still needed
 			if row == 0 {
 				// Style for the header row
 				return ui.HeaderStyle
 			}
 			if rows[row-1][STATUS_COL] == HASH_MISMATCH {
-				// return lipgloss.NewStyle().Background(lipgloss.Color("#de190b")).Foreground(lipgloss.Color("#ffffff"))
 				return ui.IncorrectStyle
 			}
 			if rows[row-1][STATUS_COL] == HASH_MATCH {

@@ -5,13 +5,30 @@ package ui
 import (
 	"fmt"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
 )
 
+func clearScreen() {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("cmd", "/c", "cls")
+	default:
+		cmd = exec.Command("clear")
+	}
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
 func StartScreen() {
+	// clear the screen
+	clearScreen()
+
 	physicalWidth, _, _ := term.GetSize(int(os.Stdout.Fd()))
 
 	doc := strings.Builder{}

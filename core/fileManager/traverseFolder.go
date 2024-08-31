@@ -44,7 +44,7 @@ func TraverseFolder(targetFolder string) {
 }
 
 func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
-	defer fmt.Println()
+	defer fmt.Print("\r")
 
 	return filepath.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
 		if err != nil {

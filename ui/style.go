@@ -4,9 +4,6 @@ import "github.com/charmbracelet/lipgloss"
 
 // Style definitions.
 var (
-	// Generel
-	Style = lipgloss.Style{}
-
 	// General Stles.
 	HighlightStyle = lipgloss.NewStyle().
 			Background(lipgloss.Color("#1bde4f")).
@@ -27,16 +24,20 @@ var (
 			Bold(true)
 
 	InfoStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#4b13e8")).
+			Foreground(lipgloss.Color("#bda917")).
 			Bold(true)
 
 	// Table.
-
-	HeaderStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("99")).
+	TableStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#6178ad")).
 			Bold(true)
 
-	BorderedTableStyle = lipgloss.NormalBorder()
+	HeaderStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#fafaf7")).
+			Align(lipgloss.Center).
+			Bold(true)
+
+	TableBorderStyle = lipgloss.ThickBorder()
 
 	// Fonts.
 	subtleFont  = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}
