@@ -11,35 +11,6 @@ import (
 	"golang.org/x/term"
 )
 
-// Style definitions.
-var (
-
-	// General.
-	subtle  = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}
-	special = lipgloss.AdaptiveColor{Light: "#43BF6D", Dark: "#73F59F"}
-
-	divider = lipgloss.NewStyle().
-		SetString("•").
-		Padding(0, 1).
-		Foreground(subtle).
-		String()
-
-	url = lipgloss.NewStyle().Foreground(special).Render
-
-	// Title.
-	descStyle = lipgloss.NewStyle().MarginTop(1)
-
-	infoStyle = lipgloss.NewStyle().
-			Align(lipgloss.Center).
-			BorderStyle(lipgloss.NormalBorder()).
-			BorderTop(true).
-			BorderForeground(subtle)
-
-	// Page.
-
-	docStyle = lipgloss.NewStyle().Padding(1, 2, 1, 2)
-)
-
 func StartScreen() {
 	physicalWidth, _, _ := term.GetSize(int(os.Stdout.Fd()))
 
