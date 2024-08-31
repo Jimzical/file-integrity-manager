@@ -13,7 +13,7 @@ Users can check the integrity of their files by running the tool again, which co
 To build the tool, run the following command from the root directory of the project:
 
 ```bash
-go build -o bin/main ./cmd/main.go
+go build -o bin/file-integrity-manager.exe ./cmd/main.go
 ```
 
 ## How to Run

@@ -29,6 +29,16 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 		}
 
 		status := getStatus(result)
+
+		switch status {
+		case NEW_ENTRY:
+			addedCount++
+		case HASH_MATCH:
+			matchCount++
+		case HASH_MISMATCH:
+			misMatchCount++
+		}
+
 		displayPath := getDisplayPath(filePath)
 		rows = append(rows, []string{displayPath, status})
 	}

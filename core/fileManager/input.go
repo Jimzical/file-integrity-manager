@@ -2,6 +2,7 @@ package fileManager
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strings"
 
@@ -9,10 +10,10 @@ import (
 )
 
 func Input(msg string) string {
+	defer fmt.Println()
 	reader := bufio.NewReader(os.Stdin)
 
 	ui.Highlight(msg)
-
 	targetFolder, _ := reader.ReadString('\n')
 	targetFolder = strings.TrimSpace(targetFolder)             // Remove all leading and trailing whitespace, including \r and \n
 	targetFolder = strings.Replace(targetFolder, "\"", "", -1) // remove quotes

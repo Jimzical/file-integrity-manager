@@ -7,6 +7,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
+
+	ui "github.com/Jimzical/file-integrity-manager/ui"
 )
 
 func getStatus(result int) string {
@@ -34,24 +36,26 @@ func getDisplayPath(filePath string) string {
 
 func printTable(rows [][]string) {
 	t := table.New().
-		Border(lipgloss.NormalBorder()).
-		BorderStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("99"))).
-		StyleFunc(func(row, col int) lipgloss.Style {
+		Border(ui.TableBorderStyle).
+		BorderStyle(ui.TableStyle).
+		StyleFunc(func(row, col int) lipgloss.Style { // cant seem to remove this so the lipgloss dependency is still needed
 			if row == 0 {
 				// Style for the header row
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("99"))
+				return ui.HeaderStyle
 			}
-			if rows[row-1][STATUS_COL] == HASH_MISMATCH {
-				// return lipgloss.NewStyle().Background(lipgloss.Color("#de190b")).Foreground(lipgloss.Color("#ffffff"))
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("#960312"))
+
+			chosenRow := rows[row-1]
+
+			if chosenRow[STATUS_COL] == HASH_MISMATCH {
+				return ui.IncorrectStyle
 			}
-			if rows[row-1][STATUS_COL] == HASH_MATCH {
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("#57b000"))
+			if chosenRow[STATUS_COL] == HASH_MATCH {
+				return ui.SpecialStyle
 			}
-			if rows[row-1][STATUS_COL] == NEW_ENTRY {
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("#4b13e8"))
+			if chosenRow[STATUS_COL] == NEW_ENTRY {
+				return ui.InfoStyle
 			}
-			return lipgloss.NewStyle().Foreground(lipgloss.Color("#4b13e8"))
+			return ui.InfoStyle
 		}).
 		Headers(HEADER_FILE, HEADER_STATUS).
 		Rows(rows...)
