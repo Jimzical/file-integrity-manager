@@ -2,25 +2,16 @@ package fileManager
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	"github.com/Jimzical/file-integrity-manager/ui"
 )
 
-func ReadTargetFolderPath() string {
+func Input(msg string) string {
 	reader := bufio.NewReader(os.Stdin)
 
-	// Define the style
-	style := lipgloss.NewStyle().
-		Background(lipgloss.Color("#1bde4f")).
-		Foreground(lipgloss.Color("#000000")).
-		Padding(0, 1).
-		Bold(true)
-
-	// Apply the style to the print statement
-	fmt.Print(style.Render("Enter the target folder path: "))
+	ui.Highlight(msg)
 
 	targetFolder, _ := reader.ReadString('\n')
 	targetFolder = strings.TrimSpace(targetFolder)             // Remove all leading and trailing whitespace, including \r and \n

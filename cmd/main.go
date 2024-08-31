@@ -16,7 +16,7 @@ func main() {
 
 	ui.StartScreen()
 
-	targetFolder = fileManager.ReadTargetFolderPath()
+	targetFolder = fileManager.Input("Enter the target folder >")
 
 	fileManager.TraverseFolder(targetFolder)
 
