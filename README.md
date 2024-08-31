@@ -16,6 +16,12 @@ To build the tool, run the following command from the root directory of the proj
 go build -o bin/file-integrity-manager.exe ./cmd/main.go
 ```
 
+To run the executable, execute the following command:
+
+```bash
+./bin/file-integrity-manager.exe
+```
+
 ## How to Run
 To install the tool, follow these steps:
 ```bash
@@ -31,4 +37,4 @@ go run main.go
 ```
 
 ## Usage
-> Will Add this later
+> Will Add this later 
