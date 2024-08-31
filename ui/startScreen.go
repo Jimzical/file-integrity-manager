@@ -23,7 +23,7 @@ func StartScreen() {
 		)
 
 		desc := lipgloss.JoinVertical(lipgloss.Left,
-			descStyle.Render(lipgloss.NewStyle().PaddingRight(10).Foreground(special).Background(lipgloss.Color("#2e302f")).Render(`
+			descStyle.Render(lipgloss.NewStyle().PaddingRight(10).Foreground(specialFont).Background(lipgloss.Color("#2e302f")).Render(`
 		
 		___ _ _       ___     _                  __          __  __                             
 		| __(_| |___  |_ _|_ _| |_ ___ __ _ _ _(_| |_ _  _  |  \/  |__ _ _ _  __ _ __ _ ___ _ _ 

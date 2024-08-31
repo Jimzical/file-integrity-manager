@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	bdgr "github.com/Jimzical/file-integrity-manager/core/badgerDB"
+	"github.com/Jimzical/file-integrity-manager/ui"
 
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 )
@@ -36,10 +37,18 @@ func TraverseFolder(targetFolder string) {
 }
 
 func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
+	defer fmt.Println()
+	fileCount := 0
+
 	return filepath.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
+
+		fileCount++
+		msg := fmt.Sprintf("\r\033[KFile %d: %s", fileCount, fileInfo.Name())
+
+		ui.Special(msg)
 
 		// adding fileStructs.fileInfo to the channel to be hashed
 		if !fileInfo.IsDir() {

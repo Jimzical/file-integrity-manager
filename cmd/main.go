@@ -13,7 +13,7 @@ func main() {
 
 	// targetFolder = "C:\\Personal\\Uni\\CS\\Golang\\file-integrity-manager\\tests"
 	// TEST = C:\Personal\Uni\CS\Golang\file-integrity-manager\tests
-
+	// TEST2 = "C:\Personal\Uni\CS\Programming with Python"
 	ui.StartScreen()
 
 	targetFolder = fileManager.Input("Enter the target folder >")

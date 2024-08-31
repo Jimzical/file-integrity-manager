@@ -46,7 +46,7 @@ func printTable(rows [][]string) {
 				return lipgloss.NewStyle().Foreground(lipgloss.Color("#960312"))
 			}
 			if rows[row-1][STATUS_COL] == HASH_MATCH {
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("#57b000"))
+				return lipgloss.NewStyle().Foreground(lipgloss.Color("#43BF6D"))
 			}
 			if rows[row-1][STATUS_COL] == NEW_ENTRY {
 				return lipgloss.NewStyle().Foreground(lipgloss.Color("#4b13e8"))

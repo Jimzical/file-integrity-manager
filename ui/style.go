@@ -11,8 +11,12 @@ var (
 			Foreground(lipgloss.Color("#000000")).
 			Padding(0, 1).
 			Bold(true)
-	subtle  = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}
-	special = lipgloss.AdaptiveColor{Light: "#43BF6D", Dark: "#73F59F"}
+	special = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#43BF6D")).
+		Bold(true)
+
+	subtle      = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}
+	specialFont = lipgloss.AdaptiveColor{Light: "#43BF6D", Dark: "#73F59F"}
 
 	divider = lipgloss.NewStyle().
 		SetString("•").
@@ -20,7 +24,7 @@ var (
 		Foreground(subtle).
 		String()
 
-	url = lipgloss.NewStyle().Foreground(special).Render
+	url = lipgloss.NewStyle().Foreground(specialFont).Render
 
 	// Title.
 	descStyle = lipgloss.NewStyle().MarginTop(1)
