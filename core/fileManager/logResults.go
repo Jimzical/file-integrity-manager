@@ -7,6 +7,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
+
+	ui "github.com/Jimzical/file-integrity-manager/ui"
 )
 
 func getStatus(result int) string {
@@ -34,24 +36,24 @@ func getDisplayPath(filePath string) string {
 
 func printTable(rows [][]string) {
 	t := table.New().
-		Border(lipgloss.NormalBorder()).
-		BorderStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("99"))).
+		Border(ui.BorderedTableStyle).
+		BorderStyle(ui.HeaderStyle).
 		StyleFunc(func(row, col int) lipgloss.Style {
 			if row == 0 {
 				// Style for the header row
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("99"))
+				return ui.HeaderStyle
 			}
 			if rows[row-1][STATUS_COL] == HASH_MISMATCH {
 				// return lipgloss.NewStyle().Background(lipgloss.Color("#de190b")).Foreground(lipgloss.Color("#ffffff"))
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("#960312"))
+				return ui.IncorrectStyle
 			}
 			if rows[row-1][STATUS_COL] == HASH_MATCH {
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("#43BF6D"))
+				return ui.SpecialStyle
 			}
 			if rows[row-1][STATUS_COL] == NEW_ENTRY {
-				return lipgloss.NewStyle().Foreground(lipgloss.Color("#4b13e8"))
+				return ui.InfoStyle
 			}
-			return lipgloss.NewStyle().Foreground(lipgloss.Color("#4b13e8"))
+			return ui.InfoStyle
 		}).
 		Headers(HEADER_FILE, HEADER_STATUS).
 		Rows(rows...)
