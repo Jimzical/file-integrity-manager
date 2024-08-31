@@ -29,7 +29,8 @@ func TraverseFolder(targetFolder string) {
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
 	if err != nil {
-		fmt.Printf("ErrorDuringHashCode walking the path %q: %v\n", targetFolder, err)
+		fmt.Println("Folder could not be found, Please try again with the correct folder path")
+		return
 	}
 
 	close(filepathsChannel)

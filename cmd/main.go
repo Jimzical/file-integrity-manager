@@ -9,15 +9,15 @@ import (
 )
 
 func main() {
+
 	ui.StartScreen()
+	targetFolder := fileManager.Input("Enter the target folder >")
 
 	startTime := time.Now()
-	// targetFolder := fileManager.Input("Enter the target folder >")
-	// BorderForeground(lipgloss.Color("63"))
-	// TEMP
-	targetFolder := "C:\\Personal\\Uni\\CS\\Golang\\file-integrity-manager\\tests"
 	fileManager.TraverseFolder(targetFolder)
 
 	ui.Important(fmt.Sprintf("\n\nTime taken to complete: %v\n", time.Since(startTime)))
 
+	fmt.Println("Press 'Enter' to exit...")
+	fmt.Scanln()
 }

@@ -43,13 +43,16 @@ func printTable(rows [][]string) {
 				// Style for the header row
 				return ui.HeaderStyle
 			}
-			if rows[row-1][STATUS_COL] == HASH_MISMATCH {
+
+			chosenRow := rows[row-1]
+
+			if chosenRow[STATUS_COL] == HASH_MISMATCH {
 				return ui.IncorrectStyle
 			}
-			if rows[row-1][STATUS_COL] == HASH_MATCH {
+			if chosenRow[STATUS_COL] == HASH_MATCH {
 				return ui.SpecialStyle
 			}
-			if rows[row-1][STATUS_COL] == NEW_ENTRY {
+			if chosenRow[STATUS_COL] == NEW_ENTRY {
 				return ui.InfoStyle
 			}
 			return ui.InfoStyle
