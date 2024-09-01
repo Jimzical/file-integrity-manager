@@ -28,6 +28,7 @@ To install the tool, follow these steps:
 git clone https://github.com/Jimzical/file-integrity-manager.git
 cd file-integrity-manager
 go install
+go mod tidy
 ```
 
 To run the tool, execute the following commands:
