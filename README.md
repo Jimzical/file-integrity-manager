@@ -36,5 +36,6 @@ cd /cmd
 go run main.go
 ```
 
-## Usage
-> Will Add this later 
+## Demo
+![image](https://github.com/user-attachments/assets/923698b9-fcef-423a-b90b-ac7a1e09efd9)
+
