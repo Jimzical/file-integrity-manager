@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-
 	ui.StartScreen()
 	targetFolder := fileManager.Input("Enter the target folder >")
 

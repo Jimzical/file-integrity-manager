@@ -10,7 +10,13 @@ import (
 
 	ui "github.com/Jimzical/file-integrity-manager/ui"
 )
-
+// getStatus returns the status of the file hash check
+//
+// Parameters:
+//   - result: The result code of the hash check
+//
+// Returns:
+//   - string: The status of the hash check {NEW_ENTRY |HASH_MATCH | HASH_MISMATCH| ERROR_CHECKING_HASH}
 func getStatus(result int) string {
 	switch result {
 	case NewEntryCode:
@@ -24,6 +30,19 @@ func getStatus(result int) string {
 	}
 }
 
+// getDisplayPath returns the display path of the file
+//
+// Parameters:
+//   - filePath: The path of the file
+//
+// Returns:
+//   - string: The display path of the file
+//
+// Example usage:
+//
+//     displayPath := getDisplayPath("/home/user/file.txt")
+//     fmt.Println("Output: ",displayPath)
+//     >> Output: .../user/file.txt
 func getDisplayPath(filePath string) string {
 	components := strings.Split(filePath, string(filepath.Separator))
 	if len(components) > 1 {

@@ -44,6 +44,14 @@ func TraverseFolder(targetFolder string) {
 
 }
 
+// walkFolder walks the folder and sends the file to the channel
+//
+// Parameters:
+//   - targetFolder: The folder to walk	
+//   - filepathsChannel: A channel that receives the file paths to be hashed.
+//
+// Returns:
+//   - error: An error if the folder walk fails.
 func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
 	defer fmt.Print("\r")
 

@@ -9,7 +9,15 @@ import (
 	badger "github.com/dgraph-io/badger"
 )
 
-// Function to write paths to the file
+// Deals with file hash and its management
+//
+// This function computes the hash of the file data and saves it to the database.
+// It also checks if the hash of the file data already exists in the database.
+//
+// Parameters:
+//   - filepathsChannel: A channel that receives the file paths to be hashed.
+//   - db: A pointer to the BadgerDB database.
+//   - wg: A pointer to the WaitGroup.
 func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 

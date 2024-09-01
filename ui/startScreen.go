@@ -25,6 +25,7 @@ func clearScreen() {
 	cmd.Run()
 }
 
+// Display the start screen (UI)
 func StartScreen() {
 	// clear the screen
 	clearScreen()
