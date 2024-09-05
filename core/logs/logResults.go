@@ -40,7 +40,7 @@ func PrintTable(rows [][]string, statusType string) {
 
 	// if there are no rows, print a message and return
 	if len(rows) == 0 {
-		fmt.Println("No files to display in this table\n")
+		fmt.Print("No files to display in this table\n\n")
 		return
 	}
 
