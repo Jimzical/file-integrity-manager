@@ -7,6 +7,8 @@ import (
 	bdgr "github.com/Jimzical/file-integrity-manager/core/badgerDB"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	badger "github.com/dgraph-io/badger"
+	logs "github.com/Jimzical/file-integrity-manager/core/logs"
+	status "github.com/Jimzical/file-integrity-manager/core/status"
 )
 
 // Deals with file hash and its management
@@ -36,20 +38,20 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 			continue
 		}
 
-		status := getStatus(result)
+		statusType := status.GetStatus(result)
 
-		switch status {
-		case NEW_ENTRY:
+		switch statusType {
+		case status.NEW_ENTRY:
 			addedCount++
-		case HASH_MATCH:
+		case status.HASH_MATCH:
 			matchCount++
-		case HASH_MISMATCH:
+		case status.HASH_MISMATCH:
 			misMatchCount++
 		}
 
-		displayPath := getDisplayPath(filePath)
-		rows = append(rows, []string{displayPath, status})
+		displayPath := logs.GetDisplayPath(filePath)
+		rows = append(rows, []string{displayPath, statusType})
 	}
 
-	printTable(rows)
+	logs.PrintTable(rows)
 }
