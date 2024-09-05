@@ -5,10 +5,10 @@ import (
 	"sync"
 
 	bdgr "github.com/Jimzical/file-integrity-manager/core/badgerDB"
-	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
-	badger "github.com/dgraph-io/badger"
 	logs "github.com/Jimzical/file-integrity-manager/core/logs"
+	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	status "github.com/Jimzical/file-integrity-manager/core/status"
+	badger "github.com/dgraph-io/badger"
 )
 
 // Deals with file hash and its management
@@ -49,9 +49,12 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 			misMatchCount++
 		}
 
-		displayPath := logs.GetDisplayPath(filePath)
-		rows = append(rows, []string{displayPath, statusType})
+		if LOGGING_ENABLED {
+			displayPath := logs.GetDisplayPath(filePath)
+			rows = append(rows, []string{displayPath, statusType})
+		}
 	}
-
-	logs.PrintTable(rows)
+	if LOGGING_ENABLED {
+		logs.PrintTable(rows)
+	}
 }

@@ -36,7 +36,11 @@ func GetDisplayPath(filePath string) string {
 }
 
 func PrintTable(rows [][]string) {
-	// 
+	// if there are no rows, print a message and return
+	if len(rows) == 0 {
+		fmt.Println("No files to display")
+		return
+	}
 
 
 	t := table.New().

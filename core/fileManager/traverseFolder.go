@@ -28,6 +28,9 @@ func TraverseFolder(targetFolder string) {
 
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
+	// clear the line
+	fmt.Print("\r\033[K")
+	
 	if err != nil {
 		fmt.Println("Folder could not be found, Please try again with the correct folder path")
 		return
