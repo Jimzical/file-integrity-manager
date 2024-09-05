@@ -8,8 +8,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 
-	ui "github.com/Jimzical/file-integrity-manager/ui"
 	status "github.com/Jimzical/file-integrity-manager/core/status"
+	ui "github.com/Jimzical/file-integrity-manager/ui"
 )
 
 // getDisplayPath returns the display path of the file
@@ -22,9 +22,9 @@ import (
 //
 // Example usage:
 //
-//     displayPath := getDisplayPath("/home/user/file.txt")
-//     fmt.Println("Output: ",displayPath)
-//     >> Output: .../user/file.txt
+//	displayPath := getDisplayPath("/home/user/file.txt")
+//	fmt.Println("Output: ",displayPath)
+//	>> Output: .../user/file.txt
 func GetDisplayPath(filePath string) string {
 	components := strings.Split(filePath, string(filepath.Separator))
 	if len(components) > 1 {
@@ -35,36 +35,39 @@ func GetDisplayPath(filePath string) string {
 	return filePath
 }
 
-func PrintTable(rows [][]string) {
+func PrintTable(rows [][]string, statusType string) {
+	fmt.Println()
+
 	// if there are no rows, print a message and return
 	if len(rows) == 0 {
-		fmt.Println("No files to display")
+		fmt.Println("No files to display in this table\n")
 		return
 	}
 
+	tableValueStyle := func(row, col int) lipgloss.Style {
+		if row == 0 {
+			// Style for the header row
+			return ui.HeaderStyle
+		}
+
+		chosenRow := rows[row-1]
+
+		switch chosenRow[STATUS_COL] {
+		case status.HASH_MISMATCH:
+			return ui.IncorrectStyle
+		case status.HASH_MATCH:
+			return ui.SpecialStyle
+		case status.NEW_ENTRY:
+			return ui.InfoStyle
+		default:
+			return ui.InfoStyle
+		}
+	}
 
 	t := table.New().
 		Border(ui.TableBorderStyle).
 		BorderStyle(ui.TableStyle).
-		StyleFunc(func(row, col int) lipgloss.Style { // cant seem to remove this so the lipgloss dependency is still needed
-			if row == 0 {
-				// Style for the header row
-				return ui.HeaderStyle
-			}
-
-			chosenRow := rows[row-1]
-
-			if chosenRow[STATUS_COL] == status.HASH_MISMATCH {
-				return ui.IncorrectStyle
-			}
-			if chosenRow[STATUS_COL] == status.HASH_MATCH {
-				return ui.SpecialStyle
-			}
-			if chosenRow[STATUS_COL] == status.NEW_ENTRY {
-				return ui.InfoStyle
-			}
-			return ui.InfoStyle
-		}).
+		StyleFunc(tableValueStyle).
 		Headers(HEADER_FILE, HEADER_STATUS).
 		Rows(rows...)
 

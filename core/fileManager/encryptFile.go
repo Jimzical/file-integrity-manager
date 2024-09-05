@@ -8,6 +8,7 @@ import (
 	logs "github.com/Jimzical/file-integrity-manager/core/logs"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	status "github.com/Jimzical/file-integrity-manager/core/status"
+	"github.com/Jimzical/file-integrity-manager/ui"
 	badger "github.com/dgraph-io/badger"
 )
 
@@ -23,7 +24,9 @@ import (
 func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	var rows [][]string
+	var matchedRows [][]string
+	var mismatchedRows [][]string
+	var addedRows [][]string
 
 	// Write the paths to the outputFile
 	for file := range filepathsChannel {
@@ -51,10 +54,26 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 
 		if LOGGING_ENABLED {
 			displayPath := logs.GetDisplayPath(filePath)
-			rows = append(rows, []string{displayPath, statusType})
+			switch statusType {
+			case status.NEW_ENTRY:
+				addedRows = append(addedRows, []string{displayPath, statusType})
+			case status.HASH_MATCH:
+				matchedRows = append(matchedRows, []string{displayPath, statusType})
+			case status.HASH_MISMATCH:
+				mismatchedRows = append(mismatchedRows, []string{displayPath, statusType})
+			default:
+				fmt.Printf("Unknown status type: %v\n", statusType)
+			}
 		}
 	}
 	if LOGGING_ENABLED {
-		logs.PrintTable(rows)
+		ui.Special("Matched files\n")
+		logs.PrintTable(matchedRows, status.HASH_MATCH)
+
+		ui.Info("Added files\n")
+		logs.PrintTable(addedRows, status.NEW_ENTRY)
+
+		ui.Incorrect("Mismatched files\n")
+		logs.PrintTable(mismatchedRows, status.HASH_MISMATCH)
 	}
 }
