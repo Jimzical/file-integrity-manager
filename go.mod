@@ -1,8 +1,11 @@
 module github.com/Jimzical/file-integrity-manager
 
 go 1.22.3
- 
-require github.com/dgraph-io/badger v1.6.2
+
+require (
+	github.com/dgraph-io/badger v1.6.2
+	github.com/iafan/cwalk v0.0.0-20210125030640-586a8832a711
+)
 
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect

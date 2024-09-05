@@ -3,13 +3,13 @@ package fileManager
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"sync"
 
-	bdgr "github.com/Jimzical/file-integrity-manager/core/badgerDB"
-	"github.com/Jimzical/file-integrity-manager/ui"
+	"github.com/iafan/cwalk"
 
+	bdgr "github.com/Jimzical/file-integrity-manager/core/badgerDB"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
+	"github.com/Jimzical/file-integrity-manager/ui"
 )
 
 func TraverseFolder(targetFolder string) {
@@ -43,8 +43,6 @@ func TraverseFolder(targetFolder string) {
 	ui.Info(fmt.Sprintf("New Files : %d\n", addedCount))
 
 }
-
-// walkFolder walks the folder and sends the file to the channel
 //
 // Parameters:
 //   - targetFolder: The folder to walk	
@@ -55,7 +53,7 @@ func TraverseFolder(targetFolder string) {
 func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
 	defer fmt.Print("\r")
 
-	return filepath.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
+	return cwalk.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
