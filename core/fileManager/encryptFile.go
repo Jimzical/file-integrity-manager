@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"sync"
 
-	bdgr "github.com/Jimzical/file-integrity-manager/core/badgerDB"
 	logs "github.com/Jimzical/file-integrity-manager/core/logs"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	status "github.com/Jimzical/file-integrity-manager/core/status"
@@ -38,7 +37,7 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 		fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
 		fileHash := hashString(fileData)
 
-		result, err := bdgr.CheckFileHash(db, filePath, fileHash)
+		result, err := CheckFileHash(db, filePath, fileHash)
 		if err != nil {
 			fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
 			continue

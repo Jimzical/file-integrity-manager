@@ -1,9 +1,10 @@
-package badgerDB
+package fileManager
 
 import (
 	"fmt"
 
 	badger "github.com/dgraph-io/badger"
+  bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
 )
 
 /*
@@ -25,23 +26,23 @@ Returns:
   - error: An error if the hash check fails.
 */
 func CheckFileHash(db *badger.DB, filepath string, hash string) (int, error) {
-    storedHash, err := GetValueFromDB(db, filepath)
+    storedHash, err := bdgr.GetValueFromDB(db, filepath)
     if err != nil {
-        return ErrorDuringHashCode, err
+        return bdgr.ErrorDuringHashCode, err
     }
 
     if storedHash == "" {
         // Key doesn't exist, add it to the database
-        err = SetValueInDB(db, filepath, hash)
+        err = bdgr.SetValueInDB(db, filepath, hash)
         if err != nil {
-            return ErrorDuringHashCode, fmt.Errorf("failed to add new entry: %v", err)
+            return bdgr.ErrorDuringHashCode, fmt.Errorf("failed to add new entry: %v", err)
         }
-        return NewEntryCode, nil // Indicate that it's a new entry
+        return bdgr.NewEntryCode, nil // Indicate that it's a new entry
     }
 
     if storedHash == hash {
-        return HashMatchCode, nil // Indicate that the hash matches
+        return bdgr.HashMatchCode, nil // Indicate that the hash matches
     }
 
-    return HashMismatchCode, nil // Indicate that the hash does not match
+    return bdgr.HashMismatchCode, nil // Indicate that the hash does not match
 }

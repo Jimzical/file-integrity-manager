@@ -7,9 +7,9 @@ import (
 
 	"github.com/iafan/cwalk"
 
-	bdgr "github.com/Jimzical/file-integrity-manager/core/badgerDB"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
-	"github.com/Jimzical/file-integrity-manager/ui"
+	ui "github.com/Jimzical/file-integrity-manager/ui"
+	bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
 )
 
 func TraverseFolder(targetFolder string) {
