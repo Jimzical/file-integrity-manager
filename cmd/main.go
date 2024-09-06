@@ -18,6 +18,4 @@ func main() {
 
 	ui.Important(fmt.Sprintf("\n\nTime taken to complete: %v\n", time.Since(startTime)))
 
-	fmt.Println("Press 'Enter' to exit...")
-	fmt.Scanln()
 }
