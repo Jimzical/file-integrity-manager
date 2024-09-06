@@ -1,7 +1,6 @@
 package badgerDB
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -48,59 +47,50 @@ func InitBadger() (*badger.DB, error) {
 }
 
 /*
-CheckFileHash checks if the hash of a file already exists in the database.
-
-This function checks if the hash of a file already exists in the database and adds it if it doesn't.
+GetValueFromDB retrieves a value from the Badger database.
 
 Parameters:
   - db: A pointer to the BadgerDB database.
-  - filepath: The path of the file.
-  - hash: The hash of the file.
+  - key: The key to retrieve.
 
 Returns:
-  - int: A code indicating the result of the hash check.
-    NewEntryCode: constant indicating a new entry (value: 0)
-    HashMatchCode: constant indicating a hash match (value: 1)
-    HashMismatchCode: constant indicating a hash mismatch (value: 2)
-    ErrorDuringHashCode: constant indicating an error during hash code (value: 3)
-  - error: An error if the hash check fails.
+  - string: The value of the key.
+  - error: An error if the key-value pair cannot be retrieved.
 */
-func CheckFileHash(db *badger.DB, filepath string, hash string) (int, error) {
-	var storedHash string
-	err := db.View(func(txn *badger.Txn) error {
-		item, err := txn.Get([]byte(filepath))
-		if err != nil {
-			if err == badger.ErrKeyNotFound {
-				return nil // Key doesn't exist, no error
-			}
-			return err
-		}
+func GetValueFromDB(db *badger.DB, key string) (string, error) {
+    var value string
+    err := db.View(func(txn *badger.Txn) error {
+        item, err := txn.Get([]byte(key))
+        if err != nil {
+            if err == badger.ErrKeyNotFound {
+                return nil // Key doesn't exist, no error
+            }
+            return err
+        }
 
-		return item.Value(func(val []byte) error {
-			storedHash = string(val)
-			return nil
-		})
-	})
-
-	if err != nil {
-		return ErrorDuringHashCode, err
-	}
-
-	if storedHash == "" {
-		// Key doesn't exist, add it to the database
-		err = db.Update(func(txn *badger.Txn) error {
-			return txn.Set([]byte(filepath), []byte(hash))
-		})
-		if err != nil {
-			return ErrorDuringHashCode, fmt.Errorf("failed to add new entry: %v", err)
-		}
-
-		return NewEntryCode, nil // Indicate that it's a new entry
-	}
-
-	if storedHash == hash {
-		return HashMatchCode, nil // Indicate that the hash matches
-	}
-
-	return HashMismatchCode, nil // Indicate that the hash does not match
+        return item.Value(func(val []byte) error {
+            value = string(val)
+            return nil
+        })
+    })
+    return value, err
 }
+
+/*
+SetValueInDB sets a key-value pair in the Badger database.
+
+Parameters:
+  - db: A pointer to the BadgerDB database.
+  - key: The key to set.
+  - value: The value to set.
+
+Returns:
+  - error: An error if the key-value pair cannot be set.
+*/
+func SetValueInDB(db *badger.DB, key, value string) error {
+    return db.Update(func(txn *badger.Txn) error {
+        return txn.Set([]byte(key), []byte(value))
+    })
+}
+
+
