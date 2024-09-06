@@ -5,18 +5,20 @@ import (
 	"encoding/hex"
 )
 
-// Hashes a string using the SHA-256 algorithm.
-//
-// Parameters:
-//   - data: The string to be hashed.
-//
-// Returns:
-//   - string: The hexadecimal hash of the input string.
-//
-// Example usage:
-//
-//     hash := fileManager.hashString("Hello, World!")
-//     fmt.Println("Hash:", hash)
+/*
+Hashes a string using the SHA-256 algorithm.
+
+Parameters:
+  - data: The string to be hashed.
+
+Returns:
+  - string: The hexadecimal hash of the input string.
+
+Example usage:
+
+    hash := fileManager.hashString("Hello, World!")
+    fmt.Println("Hash:", hash)
+*/
 func hashString(data string) string {
 	// Create a new SHA-256 hash object
 	hash := sha256.New()

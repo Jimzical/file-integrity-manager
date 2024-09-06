@@ -1,4 +1,4 @@
-package fileManager
+package configs
 
 const (
 	LOGGING_ENABLED = true

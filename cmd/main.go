@@ -5,12 +5,13 @@ import (
 	"time"
 
 	fileManager "github.com/Jimzical/file-integrity-manager/core/fileManager"
+	pkg "github.com/Jimzical/file-integrity-manager/pkg"
 	ui "github.com/Jimzical/file-integrity-manager/ui"
 )
 
 func main() {
 	ui.StartScreen()
-	targetFolder := fileManager.Input("Enter the target folder >")
+	targetFolder := pkg.Input("Enter the target folder >")
 
 	startTime := time.Now()
 	fileManager.TraverseFolder(targetFolder)

@@ -46,13 +46,17 @@ func TraverseFolder(targetFolder string) {
 	ui.Info(fmt.Sprintf("New Files : %d\n", addedCount))
 
 }
-//
-// Parameters:
-//   - targetFolder: The folder to walk	
-//   - filepathsChannel: A channel that receives the file paths to be hashed.
-//
-// Returns:
-//   - error: An error if the folder walk fails.
+
+/*
+walkFolder walks the target folder and sends the file paths to the filepathsChannel.
+
+Parameters:
+  - targetFolder: The folder to walk.
+  - filepathsChannel: A channel that receives the file paths to be hashed.
+
+Returns:
+  - error: An error if the folder walk fails.
+*/
 func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
 	defer fmt.Print("\r")
 

@@ -8,19 +8,22 @@ import (
 	logs "github.com/Jimzical/file-integrity-manager/core/logs"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	status "github.com/Jimzical/file-integrity-manager/core/status"
-	"github.com/Jimzical/file-integrity-manager/ui"
+	ui "github.com/Jimzical/file-integrity-manager/ui"
 	badger "github.com/dgraph-io/badger"
+	configs "github.com/Jimzical/file-integrity-manager/configs"
 )
 
-// Deals with file hash and its management
-//
-// This function computes the hash of the file data and saves it to the database.
-// It also checks if the hash of the file data already exists in the database.
-//
-// Parameters:
-//   - filepathsChannel: A channel that receives the file paths to be hashed.
-//   - db: A pointer to the BadgerDB database.
-//   - wg: A pointer to the WaitGroup.
+/*
+Deals with file hash and its management
+
+This function computes the hash of the file data and saves it to the database.
+It also checks if the hash of the file data already exists in the database.
+
+Parameters:
+  - filepathsChannel: A channel that receives the file paths to be hashed.
+  - db: A pointer to the BadgerDB database.
+  - wg: A pointer to the WaitGroup.
+*/
 func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 
@@ -52,7 +55,7 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 			misMatchCount++
 		}
 
-		if LOGGING_ENABLED {
+		if configs.LOGGING_ENABLED {
 			displayPath := logs.GetDisplayPath(filePath)
 			switch statusType {
 			case status.NEW_ENTRY:
@@ -66,7 +69,7 @@ func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *
 			}
 		}
 	}
-	if LOGGING_ENABLED {
+	if configs.LOGGING_ENABLED {
 		ui.Special("Matched files\n")
 		logs.PrintTable(matchedRows, status.HASH_MATCH)
 
