@@ -22,7 +22,7 @@ Parameters:
   - db: A pointer to the BadgerDB database.
   - wg: A pointer to the WaitGroup.
 */
-func (db *database) EncryptFile(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
+func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	var matchedRows [][]string
@@ -44,6 +44,7 @@ func (db *database) EncryptFile(filepathsChannel <-chan fileStructs.FileInfo, wg
 
 		statusType := status.GetStatus(result)
 
+		// Update File Counts
 		switch statusType {
 		case status.NEW_ENTRY:
 			addedCount++
