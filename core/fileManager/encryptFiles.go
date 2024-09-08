@@ -44,7 +44,7 @@ func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, w
 
 		statusType := status.GetStatus(result)
 
-		// Update File Counts
+		// Update File Counts		git revert --soft HEAD^1
 		switch statusType {
 		case status.NEW_ENTRY:
 			addedCount++

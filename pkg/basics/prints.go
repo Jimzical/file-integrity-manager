@@ -13,7 +13,7 @@ Parameters:
 Example:
 	basics.ClearAndPrint("Processing %d file...", fileCount)
 */
-func ClearAndPrint(msg interface{}) {
+func ClearAndPrint(msg any) {
     fmt.Print("\r\033[K")
     fmt.Print(msg)
 }
@@ -31,7 +31,7 @@ Returns:
 Example:
   msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
 */
-func ClearAndSprintf(format string, a ...interface{}) string {
+func ClearAndSprintf(format string, a ...any) string {
     msg := fmt.Sprintf(format, a...)
     return "\r\033[K" + msg
 }
