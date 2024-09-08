@@ -8,8 +8,9 @@ import (
 	"github.com/iafan/cwalk"
 
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
-	ui "github.com/Jimzical/file-integrity-manager/ui"
 	bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
+	"github.com/Jimzical/file-integrity-manager/pkg/basics"
+	ui "github.com/Jimzical/file-integrity-manager/ui"
 )
 
 func TraverseFolder(targetFolder string) {
@@ -28,8 +29,7 @@ func TraverseFolder(targetFolder string) {
 
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
-	// clear the line
-	fmt.Print("\r\033[K")
+	basics.ClearAndPrint("")
 	
 	if err != nil {
 		fmt.Println("Folder could not be found, Please try again with the correct folder path")
@@ -40,9 +40,9 @@ func TraverseFolder(targetFolder string) {
 	wg.Wait()
 
 	ui.Special(fmt.Sprintf("\n\nMatched Files : %d\n", matchCount))
-	fmt.Print("\033[1B\033[0G") // Move cursor down one line and to the beginning of the line
+	fmt.Println()
 	ui.Incorrect(fmt.Sprintf("Mismatched Files : %d\n", misMatchCount))
-	fmt.Print("\033[1B\033[0G") // Move cursor down one line and to the beginning of the line
+	fmt.Println()
 	ui.Info(fmt.Sprintf("New Files : %d\n", addedCount))
 
 }
@@ -66,7 +66,7 @@ func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInf
 		}
 
 		fileCount++
-		msg := fmt.Sprintf("\r\033[KFile %d: %s", fileCount, fileInfo.Name())
+		msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
 
 		ui.Special(msg)
 
