@@ -25,12 +25,12 @@ func TraverseFolder(targetFolder string) {
 	defer db.Close()
 
 	wg.Add(1)
-	go ComputeAndSaveFileHashes(filepathsChannel, db, &wg)
+	go EncryptFile(filepathsChannel, db, &wg)
 
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
 	basics.ClearAndPrint("")
-	
+
 	if err != nil {
 		fmt.Println("Folder could not be found, Please try again with the correct folder path")
 		return

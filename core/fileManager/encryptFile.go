@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"sync"
 
+	configs "github.com/Jimzical/file-integrity-manager/configs"
 	logs "github.com/Jimzical/file-integrity-manager/core/logs"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	status "github.com/Jimzical/file-integrity-manager/core/status"
 	ui "github.com/Jimzical/file-integrity-manager/ui"
 	badger "github.com/dgraph-io/badger"
-	configs "github.com/Jimzical/file-integrity-manager/configs"
 )
 
 /*
@@ -23,7 +23,7 @@ Parameters:
   - db: A pointer to the BadgerDB database.
   - wg: A pointer to the WaitGroup.
 */
-func ComputeAndSaveFileHashes(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg *sync.WaitGroup) {
+func EncryptFile(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	var matchedRows [][]string
