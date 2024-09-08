@@ -3,7 +3,8 @@ package fileManager
 import (
 	"fmt"
 
-  bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
+	"github.com/Jimzical/file-integrity-manager/core/status"
+	bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
 )
 
 /*
@@ -29,21 +30,21 @@ func (bdb *database) CheckFileHash(filepath string, hash string) (int, error) {
 
     storedHash, err := bdgr.GetValueFromDB(db, filepath)
     if err != nil {
-        return bdgr.ErrorDuringHashCode, err
+        return status.ErrorDuringHashCode, err
     }
 
     if storedHash == "" {
         // Key doesn't exist, add it to the database
         err = bdgr.SetValueInDB(db, filepath, hash)
         if err != nil {
-            return bdgr.ErrorDuringHashCode, fmt.Errorf("failed to add new entry: %v", err)
+            return status.ErrorDuringHashCode, fmt.Errorf("failed to add new entry: %v", err)
         }
-        return bdgr.NewEntryCode, nil // Indicate that it's a new entry
+        return status.NewEntryCode, nil // Indicate that it's a new entry
     }
 
     if storedHash == hash {
-        return bdgr.HashMatchCode, nil // Indicate that the hash matches
+        return status.HashMatchCode, nil // Indicate that the hash matches
     }
 
-    return bdgr.HashMismatchCode, nil // Indicate that the hash does not match
+    return status.HashMismatchCode, nil // Indicate that the hash does not match
 }
