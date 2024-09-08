@@ -24,8 +24,10 @@ func TraverseFolder(targetFolder string) {
 	}
 	defer db.Close()
 
+	database := &database{db: db}
+
 	wg.Add(1)
-	go EncryptFile(filepathsChannel, db, &wg)
+	go database.EncryptFile(filepathsChannel, &wg)
 
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)

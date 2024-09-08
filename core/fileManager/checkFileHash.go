@@ -3,7 +3,6 @@ package fileManager
 import (
 	"fmt"
 
-	badger "github.com/dgraph-io/badger"
   bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
 )
 
@@ -25,7 +24,9 @@ Returns:
     ErrorDuringHashCode: constant indicating an error during hash code (value: 3)
   - error: An error if the hash check fails.
 */
-func CheckFileHash(db *badger.DB, filepath string, hash string) (int, error) {
+func (bdb *database) CheckFileHash(filepath string, hash string) (int, error) {
+    db := bdb.db
+
     storedHash, err := bdgr.GetValueFromDB(db, filepath)
     if err != nil {
         return bdgr.ErrorDuringHashCode, err

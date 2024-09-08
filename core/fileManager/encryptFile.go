@@ -9,7 +9,6 @@ import (
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	status "github.com/Jimzical/file-integrity-manager/core/status"
 	ui "github.com/Jimzical/file-integrity-manager/ui"
-	badger "github.com/dgraph-io/badger"
 )
 
 /*
@@ -23,7 +22,7 @@ Parameters:
   - db: A pointer to the BadgerDB database.
   - wg: A pointer to the WaitGroup.
 */
-func EncryptFile(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg *sync.WaitGroup) {
+func (db *database) EncryptFile(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	var matchedRows [][]string
@@ -37,7 +36,7 @@ func EncryptFile(filepathsChannel <-chan fileStructs.FileInfo, db *badger.DB, wg
 		fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
 		fileHash := hashString(fileData)
 
-		result, err := CheckFileHash(db, filePath, fileHash)
+		result, err := db.CheckFileHash(filePath, fileHash)
 		if err != nil {
 			fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
 			continue
