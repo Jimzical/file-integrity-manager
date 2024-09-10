@@ -31,14 +31,14 @@ func TraverseFolder(targetFolder string) {
 
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
-	basics.ClearAndPrint("")
-
 	if err != nil {
 		fmt.Println("Folder could not be found, Please try again with the correct folder path")
 		return
 	}
-
 	close(filepathsChannel)
+
+	basics.ClearAndPrint("")
+
 	wg.Wait()
 
 	ui.Special(fmt.Sprintf("\n\nMatched Files : %d\n", matchCount))

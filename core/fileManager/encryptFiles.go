@@ -19,7 +19,6 @@ It also checks if the hash of the file data already exists in the database.
 
 Parameters:
   - filepathsChannel: A channel that receives the file paths to be hashed.
-  - db: A pointer to the BadgerDB database.
   - wg: A pointer to the WaitGroup.
 */
 func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
