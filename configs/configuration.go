@@ -1,7 +1,7 @@
 package configs
 
 const (
-	LOGGING_ENABLED = false
+	LOGGING_ENABLED = true
 	BadgerFolderName = "/filehash"
 	
 )
