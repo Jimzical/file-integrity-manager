@@ -44,8 +44,6 @@ Parameters:
 func (db *database) FileManager(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
     defer wg.Done()
 
-    
-
     statusChannel := make(chan fileStatus)
 
     // Launch a goroutine to process files and send the status to the statusChannel
@@ -64,21 +62,30 @@ Parameters:
 */
 func (db *database) checkFileStatus(filepathsChannel <-chan fileStructs.FileInfo, statusChannel chan<- fileStatus) {
     defer close(statusChannel)
+    var wg sync.WaitGroup
+
     for file := range filepathsChannel {
-        filePath := file.FilePath
+        wg.Add(1)
+        go func(file fileStructs.FileInfo) {
+            defer wg.Done()
+            
+            filePath := file.FilePath
 
-        fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
-        fileHash := hashString(fileData)
+            fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
+            fileHash := hashString(fileData)
 
-        result, err := db.CheckFileHash(filePath, fileHash)
-        if err != nil {
-            fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
-            continue
-        }
+            result, err := db.CheckFileHash(filePath, fileHash)
+            if err != nil {
+                fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
+                return
+            }
 
-        statusType := status.GetStatus(result)
-        statusChannel <- fileStatus{filePath, statusType}
+            statusType := status.GetStatus(result)
+            statusChannel <- fileStatus{filePath, statusType}
+        }(file)
     }
+
+    wg.Wait()
 }
 
 /*
