@@ -68,7 +68,7 @@ func PrintTable(rows [][]string, statusType string) {
 		Border(ui.TableBorderStyle).
 		BorderStyle(ui.TableStyle).
 		StyleFunc(tableValueStyle).
-		Headers(HEADER_FILE, HEADER_STATUS).
+		Headers(FILE_HEADER, STATUS_HEADER).
 		Rows(rows...)
 
 	fmt.Println(t)

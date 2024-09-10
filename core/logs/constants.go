@@ -2,8 +2,8 @@ package logs
 
 // Table
 const (
-	HEADER_FILE   = "File"
-	HEADER_STATUS = "Status"
+	FILE_HEADER   = "File"
+	STATUS_HEADER = "Status"
 	FILE_COL      = 0
 	STATUS_COL    = 1
 )
