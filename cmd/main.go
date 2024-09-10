@@ -6,12 +6,11 @@ import (
 
 	fileManager "github.com/Jimzical/file-integrity-manager/core/fileManager"
 	ui "github.com/Jimzical/file-integrity-manager/ui"
-	basics "github.com/Jimzical/file-integrity-manager/pkg/basics"
 )
 
 func main() {
 	ui.StartScreen()
-	targetFolder := basics.Input("Enter the target folder >")
+	targetFolder := ui.InputFilePath("Enter the target folder >")
 
 	startTime := time.Now()
 	fileManager.TraverseFolder(targetFolder)
