@@ -7,7 +7,6 @@ import (
 
 	"github.com/iafan/cwalk"
 
-	configs "github.com/Jimzical/file-integrity-manager/configs"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
 	"github.com/Jimzical/file-integrity-manager/pkg/basics"
@@ -69,8 +68,9 @@ func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInf
 			return err
 		}
 
-		if configs.LOGGING_ENABLED {
-			fileCount++
+		fileCount++
+		// Clear the line and print the file name every 100 files
+		if fileCount%100 == 0 {
 			msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
 			ui.Success(msg)
 		}
