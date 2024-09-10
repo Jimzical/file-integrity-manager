@@ -36,24 +36,7 @@ func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, w
     statusChannel := make(chan fileStatus)
 
     // Launch a goroutine to process files
-    go func() {
-		defer close(statusChannel)
-        for file := range filepathsChannel {
-            filePath := file.FilePath
-
-            fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
-            fileHash := hashString(fileData)
-
-            result, err := db.CheckFileHash(filePath, fileHash)
-            if err != nil {
-                fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
-                continue
-            }
-
-            statusType := status.GetStatus(result)
-            statusChannel <- fileStatus{filePath, statusType}
-        }
-    }()
+    go db.processFiles(filepathsChannel, statusChannel)
 
     // Read from the statusChannel and update file counts
     for fileStatus := range statusChannel {
@@ -90,5 +73,31 @@ func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, w
 
         ui.Danger("Mismatched files\n")
         logs.PrintTable(mismatchedRows, status.HASH_MISMATCH)
+    }
+}
+
+/*
+Processes the files coming in from the filepathChannel and sends the status to the statusChannel to get classified and counted.
+
+Parameters:
+  - filepathsChannel: A channel that receives the file paths to be hashed.
+  - statusChannel: A channel that sends the status of the file to be classified and counted.
+*/
+func (db *database) processFiles(filepathsChannel <-chan fileStructs.FileInfo, statusChannel chan<- fileStatus) {
+    defer close(statusChannel)
+    for file := range filepathsChannel {
+        filePath := file.FilePath
+
+        fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
+        fileHash := hashString(fileData)
+
+        result, err := db.CheckFileHash(filePath, fileHash)
+        if err != nil {
+            fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
+            continue
+        }
+
+        statusType := status.GetStatus(result)
+        statusChannel <- fileStatus{filePath, statusType}
     }
 }
