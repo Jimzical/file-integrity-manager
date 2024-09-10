@@ -2,12 +2,12 @@ package fileManager
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"sync"
 
 	"github.com/iafan/cwalk"
 
-	configs "github.com/Jimzical/file-integrity-manager/configs"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
 	"github.com/Jimzical/file-integrity-manager/pkg/basics"
@@ -28,12 +28,12 @@ func TraverseFolder(targetFolder string) {
 	database := &database{db: db}
 
 	wg.Add(1)
-	go database.EncryptFiles(filepathsChannel, &wg)
+	go database.FileManager(filepathsChannel, &wg)
 
 	// Walk the folder and send file to the channel
 	err = walkFolder(targetFolder, filepathsChannel)
 	if err != nil {
-		fmt.Println("Folder could not be found, Please try again with the correct folder path")
+		log.Println("Folder could not be found, Please try again with the correct folder path")
 		return
 	}
 	close(filepathsChannel)
@@ -69,8 +69,9 @@ func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInf
 			return err
 		}
 
-		if configs.LOGGING_ENABLED {
-			fileCount++
+		fileCount++
+		// Clear the line and print the file name every 10,000 files
+		if fileCount % 10000 == 0 {
 			msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
 			ui.Success(msg)
 		}

@@ -16,6 +16,21 @@ type fileStatus struct {
     statusType string
 }
 
+// For Stats
+var (
+    matchCount int
+    misMatchCount int
+    addedCount int
+)
+
+// For Logging
+var (
+    matchedRows [][]string
+    mismatchedRows [][]string
+    addedRows [][]string
+)
+
+
 /*
 Deals with file hash and its management
 
@@ -26,18 +41,60 @@ Parameters:
   - filepathsChannel: A channel that receives the file paths to be hashed.
   - wg: A pointer to the WaitGroup.
 */
-func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
+func (db *database) FileManager(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
     defer wg.Done()
-
-    var matchedRows [][]string
-    var mismatchedRows [][]string
-    var addedRows [][]string
 
     statusChannel := make(chan fileStatus)
 
-    // Launch a goroutine to process files
-    go db.processFiles(filepathsChannel, statusChannel)
+    // Launch a goroutine to process files and send the status to the statusChannel
+    go db.checkFileStatus(filepathsChannel, statusChannel)
 
+    // Read from the statusChannel and update file counts
+    go updateFileStatus(statusChannel)
+}
+
+/*
+Processes the files coming in from the filepathChannel and sends the status to the statusChannel to get classified and counted.
+
+Parameters:
+  - filepathsChannel: A channel that receives the file paths to be hashed.
+  - statusChannel: A channel that sends the status of the file to be classified and counted.
+*/
+func (db *database) checkFileStatus(filepathsChannel <-chan fileStructs.FileInfo, statusChannel chan<- fileStatus) {
+    defer close(statusChannel)
+    var wg sync.WaitGroup
+
+    for file := range filepathsChannel {
+        wg.Add(1)
+        go func(file fileStructs.FileInfo) {
+            defer wg.Done()
+            
+            filePath := file.FilePath
+
+            fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
+            fileHash := hashString(fileData)
+
+            result, err := db.CheckFileHash(filePath, fileHash)
+            if err != nil {
+                fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
+                return
+            }
+
+            statusType := status.GetStatus(result)
+            statusChannel <- fileStatus{filePath, statusType}
+        }(file)
+    }
+
+    wg.Wait()
+}
+
+/*
+Updates the file counts based on the status received from the statusChannel.
+
+Parameters:
+    - statusChannel: A channel that sends the status of the file to be classified and counted.
+*/
+func updateFileStatus(statusChannel <-chan fileStatus) {
     // Read from the statusChannel and update file counts
     for fileStatus := range statusChannel {
         switch fileStatus.statusType {
@@ -74,30 +131,4 @@ func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, w
         ui.Danger("Mismatched files\n")
         logs.PrintTable(mismatchedRows, status.HASH_MISMATCH)
     }
-}
-
-/*
-Processes the files coming in from the filepathChannel and sends the status to the statusChannel to get classified and counted.
-
-Parameters:
-  - filepathsChannel: A channel that receives the file paths to be hashed.
-  - statusChannel: A channel that sends the status of the file to be classified and counted.
-*/
-func (db *database) processFiles(filepathsChannel <-chan fileStructs.FileInfo, statusChannel chan<- fileStatus) {
-    defer close(statusChannel)
-    for file := range filepathsChannel {
-        filePath := file.FilePath
-
-        fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
-        fileHash := hashString(fileData)
-
-        result, err := db.CheckFileHash(filePath, fileHash)
-        if err != nil {
-            fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
-            continue
-        }
-
-        statusType := status.GetStatus(result)
-        statusChannel <- fileStatus{filePath, statusType}
-    }
-}
+}   
