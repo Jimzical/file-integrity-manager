@@ -1,15 +1,20 @@
 package fileManager
 
 import (
-	"fmt"
-	"sync"
+    "fmt"
+    "sync"
 
-	configs "github.com/Jimzical/file-integrity-manager/configs"
-	logs "github.com/Jimzical/file-integrity-manager/core/logs"
-	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
-	status "github.com/Jimzical/file-integrity-manager/core/status"
-	ui "github.com/Jimzical/file-integrity-manager/ui"
+    configs "github.com/Jimzical/file-integrity-manager/configs"
+    logs "github.com/Jimzical/file-integrity-manager/core/logs"
+    fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
+    status "github.com/Jimzical/file-integrity-manager/core/status"
+    ui "github.com/Jimzical/file-integrity-manager/ui"
 )
+
+type fileStatus struct {
+    filePath   string
+    statusType string
+}
 
 /*
 Deals with file hash and its management
@@ -22,59 +27,68 @@ Parameters:
   - wg: A pointer to the WaitGroup.
 */
 func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
-	defer wg.Done()
+    defer wg.Done()
 
-	var matchedRows [][]string
-	var mismatchedRows [][]string
-	var addedRows [][]string
+    var matchedRows [][]string
+    var mismatchedRows [][]string
+    var addedRows [][]string
 
-	// Write the paths to the outputFile
-	for file := range filepathsChannel {
-		filePath := file.FilePath
+    statusChannel := make(chan fileStatus)
 
-		fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
-		fileHash := hashString(fileData)
+    // Launch a goroutine to process files
+    go func() {
+		defer close(statusChannel)
+        for file := range filepathsChannel {
+            filePath := file.FilePath
 
-		result, err := db.CheckFileHash(filePath, fileHash)
-		if err != nil {
-			fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
-			continue
-		}
+            fileData := fmt.Sprintf("%s %v %d %v", filePath, file.FileMode, file.FileSize, file.ModTime)
+            fileHash := hashString(fileData)
 
-		statusType := status.GetStatus(result)
+            result, err := db.CheckFileHash(filePath, fileHash)
+            if err != nil {
+                fmt.Printf("ErrorDuringHashCode checking file hash %q: %v\n", filePath, err)
+                continue
+            }
 
-		// Update File Counts		git revert --soft HEAD^1
-		switch statusType {
-		case status.NEW_ENTRY:
-			addedCount++
-		case status.HASH_MATCH:
-			matchCount++
-		case status.HASH_MISMATCH:
-			misMatchCount++
-		}
+            statusType := status.GetStatus(result)
+            statusChannel <- fileStatus{filePath, statusType}
+        }
+    }()
 
-		if configs.LOGGING_ENABLED {
-			displayPath := logs.GetDisplayPath(filePath)
-			switch statusType {
-			case status.NEW_ENTRY:
-				addedRows = append(addedRows, []string{displayPath, statusType})
-			case status.HASH_MATCH:
-				matchedRows = append(matchedRows, []string{displayPath, statusType})
-			case status.HASH_MISMATCH:
-				mismatchedRows = append(mismatchedRows, []string{displayPath, statusType})
-			default:
-				fmt.Printf("Unknown status type: %v\n", statusType)
-			}
-		}
-	}
-	if configs.LOGGING_ENABLED {
-		ui.Success("Matched files\n")
-		logs.PrintTable(matchedRows, status.HASH_MATCH)
+    // Read from the statusChannel and update file counts
+    for fileStatus := range statusChannel {
+        switch fileStatus.statusType {
+        case status.NEW_ENTRY:
+            addedCount++
+        case status.HASH_MATCH:
+            matchCount++
+        case status.HASH_MISMATCH:
+            misMatchCount++
+        }
 
-		ui.Info("Added files\n")
-		logs.PrintTable(addedRows, status.NEW_ENTRY)
+        if configs.LOGGING_ENABLED {
+            displayPath := logs.GetDisplayPath(fileStatus.filePath)
+            switch fileStatus.statusType {
+            case status.NEW_ENTRY:
+                addedRows = append(addedRows, []string{displayPath, fileStatus.statusType})
+            case status.HASH_MATCH:
+                matchedRows = append(matchedRows, []string{displayPath, fileStatus.statusType})
+            case status.HASH_MISMATCH:
+                mismatchedRows = append(mismatchedRows, []string{displayPath, fileStatus.statusType})
+            default:
+                fmt.Printf("Unknown status type: %v\n", fileStatus.statusType)
+            }
+        }
+    }
 
-		ui.Danger("Mismatched files\n")
-		logs.PrintTable(mismatchedRows, status.HASH_MISMATCH)
-	}
+    if configs.LOGGING_ENABLED {
+        ui.Success("Matched files\n")
+        logs.PrintTable(matchedRows, status.HASH_MATCH)
+
+        ui.Info("Added files\n")
+        logs.PrintTable(addedRows, status.NEW_ENTRY)
+
+        ui.Danger("Mismatched files\n")
+        logs.PrintTable(mismatchedRows, status.HASH_MISMATCH)
+    }
 }
