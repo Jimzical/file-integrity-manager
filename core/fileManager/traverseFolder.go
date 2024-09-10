@@ -7,6 +7,7 @@ import (
 
 	"github.com/iafan/cwalk"
 
+	configs "github.com/Jimzical/file-integrity-manager/configs"
 	fileStructs "github.com/Jimzical/file-integrity-manager/core/models"
 	bdgr "github.com/Jimzical/file-integrity-manager/pkg/badgerDB"
 	"github.com/Jimzical/file-integrity-manager/pkg/basics"
@@ -61,16 +62,18 @@ Returns:
 */
 func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInfo) error {
 	defer fmt.Print("\r")
+	var fileCount int
 
 	return cwalk.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		fileCount++
-		msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
-
-		ui.Success(msg)
+		if configs.LOGGING_ENABLED {
+			fileCount++
+			msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
+			ui.Success(msg)
+		}
 
 		// adding fileStructs.fileInfo to the channel to be hashed
 		if !fileInfo.IsDir() {

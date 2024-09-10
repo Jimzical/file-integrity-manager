@@ -6,7 +6,7 @@ A command-line tool for managing file integrity, written entirely in Go.
 
 File Integrity Manager ensures the integrity of files within a directory by generating and maintaining hashes for each file, including those in nested directories with a 3x performance boost compared to Python. 
 
-It leverages the power of goroutines to process files concurrently, enhancing efficiency. The resulting hashes are stored in BadgerDB, a high-performance key-value store built in Go, designed for concurrent reads and writes leading in 3x performance boost compared to Python. Additionally, the tool employs Lipgloss to create a visually appealing user interface.
+It leverages the power of goroutines to process files concurrently, enhancing efficiency. The resulting hashes are stored in BadgerDB, a high-performance key-value store built in Go, designed for concurrent reads and writes leading in 6x performance boost compared to Python. Additionally, the tool employs Lipgloss to create a visually appealing user interface.
 
 Users can check the integrity of their files by running the tool again, which compares the current hashes with those stored in the database and highlights any files that have been modified.
 
