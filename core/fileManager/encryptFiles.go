@@ -68,13 +68,13 @@ func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, w
 		}
 	}
 	if configs.LOGGING_ENABLED {
-		ui.Special("Matched files\n")
+		ui.Success("Matched files\n")
 		logs.PrintTable(matchedRows, status.HASH_MATCH)
 
 		ui.Info("Added files\n")
 		logs.PrintTable(addedRows, status.NEW_ENTRY)
 
-		ui.Incorrect("Mismatched files\n")
+		ui.Danger("Mismatched files\n")
 		logs.PrintTable(mismatchedRows, status.HASH_MISMATCH)
 	}
 }

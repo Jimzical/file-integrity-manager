@@ -11,7 +11,7 @@ var (
 			Padding(0, 1).
 			Bold(true)
 
-	SpecialStyle = lipgloss.NewStyle().
+	SuccessStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#43BF6D")).
 			Bold(true)
 
@@ -19,7 +19,7 @@ var (
 			Foreground(lipgloss.Color("#ffffff")).
 			Bold(true)
 
-	IncorrectStyle = lipgloss.NewStyle().
+	DangerStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#de190b")).
 			Bold(true)
 

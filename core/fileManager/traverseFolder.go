@@ -41,9 +41,9 @@ func TraverseFolder(targetFolder string) {
 
 	wg.Wait()
 
-	ui.Special(fmt.Sprintf("\n\nMatched Files : %d\n", matchCount))
+	ui.Success(fmt.Sprintf("\n\nMatched Files : %d\n", matchCount))
 	fmt.Println()
-	ui.Incorrect(fmt.Sprintf("Mismatched Files : %d\n", misMatchCount))
+	ui.Danger(fmt.Sprintf("Mismatched Files : %d\n", misMatchCount))
 	fmt.Println()
 	ui.Info(fmt.Sprintf("New Files : %d\n", addedCount))
 
@@ -70,7 +70,7 @@ func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInf
 		fileCount++
 		msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
 
-		ui.Special(msg)
+		ui.Success(msg)
 
 		// adding fileStructs.fileInfo to the channel to be hashed
 		if !fileInfo.IsDir() {

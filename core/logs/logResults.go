@@ -54,9 +54,9 @@ func PrintTable(rows [][]string, statusType string) {
 
 		switch chosenRow[STATUS_COL] {
 		case status.HASH_MISMATCH:
-			return ui.IncorrectStyle
+			return ui.DangerStyle
 		case status.HASH_MATCH:
-			return ui.SpecialStyle
+			return ui.SuccessStyle
 		case status.NEW_ENTRY:
 			return ui.InfoStyle
 		default:
