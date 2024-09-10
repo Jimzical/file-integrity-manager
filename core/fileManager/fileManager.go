@@ -26,7 +26,7 @@ Parameters:
   - filepathsChannel: A channel that receives the file paths to be hashed.
   - wg: A pointer to the WaitGroup.
 */
-func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
+func (db *database) FileManager(filepathsChannel <-chan fileStructs.FileInfo, wg *sync.WaitGroup) {
     defer wg.Done()
 
     var matchedRows [][]string
@@ -35,8 +35,8 @@ func (db *database) EncryptFiles(filepathsChannel <-chan fileStructs.FileInfo, w
 
     statusChannel := make(chan fileStatus)
 
-    // Launch a goroutine to process files
-    go db.processFiles(filepathsChannel, statusChannel)
+    // Launch a goroutine to process files and send the status to the statusChannel
+    go db.checkFileStatus(filepathsChannel, statusChannel)
 
     // Read from the statusChannel and update file counts
     for fileStatus := range statusChannel {
@@ -83,7 +83,7 @@ Parameters:
   - filepathsChannel: A channel that receives the file paths to be hashed.
   - statusChannel: A channel that sends the status of the file to be classified and counted.
 */
-func (db *database) processFiles(filepathsChannel <-chan fileStructs.FileInfo, statusChannel chan<- fileStatus) {
+func (db *database) checkFileStatus(filepathsChannel <-chan fileStructs.FileInfo, statusChannel chan<- fileStatus) {
     defer close(statusChannel)
     for file := range filepathsChannel {
         filePath := file.FilePath
