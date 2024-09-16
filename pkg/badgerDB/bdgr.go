@@ -41,6 +41,8 @@ func InitBadger() (*badger.DB, error) {
 	opt := badger.DefaultOptions(dbDir)
 	opt.Logger = nil // Disable Badger's default logger
 	opt.Truncate = true
+  opt.SyncWrites = false
+
 	db, err := badger.Open(opt)
 
 	return db, err

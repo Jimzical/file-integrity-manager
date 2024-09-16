@@ -39,6 +39,11 @@ cd /cmd
 go run main.go
 ```
 
+
+> To Toggle Logging
+> Go to /configs/configurations.go and set the `LOGGING_ENABLED` variable to `true` or `false` to enable or disable logging respectively.
+
+
 ## Demo
 ![image](https://github.com/user-attachments/assets/923698b9-fcef-423a-b90b-ac7a1e09efd9)
 
