@@ -70,8 +70,8 @@ func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInf
 		}
 
 		fileCount++
-		// Clear the line and print the file name every 10,000 files
-		if fileCount % 5000 == 0 {
+		// Clear the line and print the file name every 16,384 (2 ^ 14) files
+		if fileCount & 16383 == 0 {
 			msg := basics.ClearAndSprintf("File %d: %s", fileCount, fileInfo.Name())
 			ui.Success(msg)
 		}
