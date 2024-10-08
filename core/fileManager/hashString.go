@@ -30,7 +30,6 @@ func hashString(data string) string {
 	hashBytes := hash.Sum(nil)
 
 	// Convert the byte slice to a hexadecimal string
-	hashString := hex.EncodeToString(hashBytes)
 
-	return hashString
+	return hex.EncodeToString(hashBytes)
 }
