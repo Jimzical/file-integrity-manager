@@ -42,7 +42,11 @@ func InitBadger() (*badger.DB, error) {
 	opt.Logger = nil // Disable Badger's default logger
 	opt.Truncate = true
   opt.SyncWrites = false
+  opt.EventLogging = false
+  // opt.BypassLockGuard = true
+  // opt.MaxTableSize = 256 << 20  // 256 MB
 
+  
 	db, err := badger.Open(opt)
 
 	return db, err
