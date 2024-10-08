@@ -64,6 +64,7 @@ func walkFolder(targetFolder string, filepathsChannel chan<- fileStructs.FileInf
 	defer fmt.Print("\r")
 	var fileCount int
 
+	cwalk.NumWorkers = 16
 	return cwalk.Walk(targetFolder, func(file string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
 			return err
